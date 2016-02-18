@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SwiftWeather" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="cloudy2" translatesAutoresizingMaskIntoConstraints="NO" id="Qdv-Q4-g0o">
+                                <rect key="frame" x="236" y="158" width="128" height="128"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="南昌" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="50Q-Dg-JSU">
+                                <rect key="frame" x="273" y="84" width="54" height="33"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="27"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="显示经伟度" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ngp-jW-3EG">
+                                <rect key="frame" x="20" y="559" width="85" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="17.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dik-EC-26b">
+                                <rect key="frame" x="244" y="309" width="113" height="77"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="64"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="Qdv-Q4-g0o" firstAttribute="top" secondItem="50Q-Dg-JSU" secondAttribute="bottom" constant="41" id="2e2-4v-IGB"/>
+                            <constraint firstItem="50Q-Dg-JSU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Iz1-t7-Hnh"/>
+                            <constraint firstItem="dik-EC-26b" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="JjI-A7-PdC"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ngp-jW-3EG" secondAttribute="bottom" constant="20" id="LNz-Hh-Axw"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="ngp-jW-3EG" secondAttribute="leading" id="VVG-nr-2RG"/>
+                            <constraint firstItem="dik-EC-26b" firstAttribute="top" secondItem="Qdv-Q4-g0o" secondAttribute="bottom" constant="23" id="gPI-vZ-ZVP"/>
+                            <constraint firstItem="50Q-Dg-JSU" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="64" id="oFU-wl-M9q"/>
+                            <constraint firstItem="Qdv-Q4-g0o" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xUn-P6-tsV"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="atitudeAndLongtitude" destination="ngp-jW-3EG" id="qxt-av-Btq"/>
+                        <outlet property="imgIcon" destination="Qdv-Q4-g0o" id="li3-qf-kbx"/>
+                        <outlet property="labTemp" destination="dik-EC-26b" id="9nN-O2-WEp"/>
+                        <outlet property="labelCityName" destination="50Q-Dg-JSU" id="vGQ-GC-TvT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="600" y="441"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="cloudy2" width="128" height="128"/>
+    </resources>
+</document>
