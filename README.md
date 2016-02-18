@@ -1,3 +1,2 @@
 # SwiftWeather
-(https://github.com/xypng/SwiftWeather/SimulatorScreenShot.png)
-
+(https://raw.githubusercontent.com/xypng/SwiftWeather/master/SimulatorScreenShot.png)
