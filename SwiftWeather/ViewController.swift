@@ -11,10 +11,12 @@ import CoreLocation
 
 let apikey = "81c95577f51e8ad0d9174e71edb43e2c"
 let weatherServiceUrl = "http://api.openweathermap.org/data/2.5/weather"
-var errorLocationTimes = 0
-let transition = CATransition();
 
 class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewDelegate {
+    var errorLocationTimes = 0
+    let transition = CATransition()
+    let locationManager = CLLocationManager()
+    
     @IBOutlet weak var atitudeAndLongtitude: UILabel!
 
     @IBOutlet weak var labelCityName: UILabel!
@@ -26,9 +28,35 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
     @IBOutlet weak var loading: UILabel!
     @IBOutlet weak var loadIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imgBackground: UIImageView!
-    let locationManager = CLLocationManager()
+    
+    @IBOutlet weak var viewWidth: NSLayoutConstraint!
+    
+    @IBOutlet weak var viewHeight: NSLayoutConstraint!
+    
+    @IBOutlet weak var firstViewLeading: NSLayoutConstraint!
+    
+    @IBOutlet weak var secondViewLeading: NSLayoutConstraint!
+    
+    @IBOutlet weak var thirdViewLeading: NSLayoutConstraint!
+    
+    @IBOutlet weak var firstView: UIView!
+    
+    @IBOutlet weak var secondView: UIView!
+    
+    @IBOutlet weak var thirdView: UIView!
+    
+    @IBOutlet weak var containerView: UIView!
+    
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        firstView.backgroundColor = UIColor().colorWithAlphaComponent(0)
+        secondView.backgroundColor = UIColor().colorWithAlphaComponent(0)
+        thirdView.backgroundColor = UIColor().colorWithAlphaComponent(0)
+        containerView.backgroundColor = UIColor().colorWithAlphaComponent(0)
+        scrollView.backgroundColor = UIColor().colorWithAlphaComponent(0)
         
         transition.type = "fade";
         transition.duration = 1.0;
@@ -36,6 +64,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
         transition.fillMode = "forwards"
         
         loadIndicator.startAnimating()
+        
         
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -56,8 +85,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location: CLLocation = locations[locations.count-1] as CLLocation
         if location.horizontalAccuracy>0 {
-            print(location.coordinate.latitude)
-            print(location.coordinate.longitude)
+            print("latitude:\(location.coordinate.latitude)")
+            print("longtitude:\(location.coordinate.longitude)")
             atitudeAndLongtitude.text = "\(location.coordinate.latitude),\(location.coordinate.longitude)"
             updateWeatherInfo(location.coordinate.latitude,longtitude: location.coordinate.longitude)
         }
@@ -121,13 +150,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
             var nightTime = false
             let now = NSDate().timeIntervalSince1970
             
-            self.imgBackground.layer.addAnimation(transition, forKey: nil)
+//            self.imgBackground.layer.addAnimation(transition, forKey: nil)
             if Int(now)<sunrise||Int(now)>sunset {
                 nightTime = true
-                self.imgBackground.image = UIImage(named: "background_night")
+//                self.imgBackground.image = UIImage(named: "background_night")
             } else {
                 nightTime = false
-                self.imgBackground.image = UIImage(named: "background")
+//                self.imgBackground.image = UIImage(named: "background")
             }
             self.updateWeatherIcon(condition, nightTime: nightTime)
         } else {
@@ -135,11 +164,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
             loadIndicator.hidden = true
             loadIndicator.stopAnimating()
         }
-    }
-    
-    func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
-        print(scrollView.contentOffset.x,scrollView.contentOffset.y)
-        print(scrollView.contentSize.width,scrollView.contentSize.height)
     }
     
     //根据代码和是否晚上更新天气图标
@@ -216,6 +240,23 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
         else {
             imgIcon.image = UIImage(named: "dunno")
         }
+    }
+    
+    func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
+        print(scrollView.contentOffset.x,scrollView.contentOffset.y)
+        print(scrollView.contentSize.width,scrollView.contentSize.height)
+    }
+    
+    override func updateViewConstraints() {
+        super.updateViewConstraints()
+        print(CGRectGetHeight(UIScreen.mainScreen().bounds))
+        print(CGRectGetWidth(UIScreen.mainScreen().bounds))
+        viewWidth.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)*3
+        //为了让垂直方向上有弹性只好+1,目前还没找到更好的办法.
+        viewHeight.constant = CGRectGetHeight(UIScreen.mainScreen().bounds)+1
+        firstViewLeading.constant = -20.0
+        secondViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)-20.0
+        thirdViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)*2-20.0
     }
 }
 
