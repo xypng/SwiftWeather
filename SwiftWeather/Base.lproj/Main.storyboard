@@ -18,7 +18,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="SH1-Hi-iYu">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kn7-pR-w4f">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="size" keyPath="contentSize">
+                                        <size key="value" width="320" height="1000"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="ZLW-IJ-eQ9"/>
+                                </connections>
+                            </scrollView>
+                            <imageView hidden="YES" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="SH1-Hi-iYu">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Qdv-Q4-g0o">
@@ -49,8 +61,8 @@
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="GCd-Yi-ZRg">
                                 <rect key="frame" x="282" y="203" width="37" height="37"/>
                             </activityIndicatorView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="正在加载天气信息,请稍等..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X43-7a-Ics">
-                                <rect key="frame" x="155" y="317" width="290" height="29"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="正在加载天气信息,请稍等..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X43-7a-Ics">
+                                <rect key="frame" x="167" y="317" width="266" height="27"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -67,15 +79,21 @@
                             <constraint firstItem="50Q-Dg-JSU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Iz1-t7-Hnh"/>
                             <constraint firstItem="dik-EC-26b" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="JjI-A7-PdC"/>
                             <constraint firstItem="GCd-Yi-ZRg" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="JnA-Hh-hLP"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="kn7-pR-w4f" secondAttribute="bottom" id="KwB-bb-OSn"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ngp-jW-3EG" secondAttribute="bottom" constant="20" id="LNz-Hh-Axw"/>
                             <constraint firstItem="X43-7a-Ics" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Ofa-BG-yzl"/>
                             <constraint firstAttribute="leadingMargin" secondItem="ngp-jW-3EG" secondAttribute="leading" id="VVG-nr-2RG"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="kn7-pR-w4f" secondAttribute="trailing" constant="-20" id="dpd-xp-HDm"/>
                             <constraint firstItem="dik-EC-26b" firstAttribute="top" secondItem="Qdv-Q4-g0o" secondAttribute="bottom" constant="23" id="gPI-vZ-ZVP"/>
+                            <constraint firstItem="kn7-pR-w4f" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="k6W-7A-q3K"/>
                             <constraint firstItem="50Q-Dg-JSU" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="64" id="oFU-wl-M9q"/>
                             <constraint firstAttribute="trailingMargin" secondItem="SH1-Hi-iYu" secondAttribute="trailing" constant="-20" id="ubr-Sv-0BD"/>
                             <constraint firstItem="Qdv-Q4-g0o" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xUn-P6-tsV"/>
+                            <constraint firstItem="kn7-pR-w4f" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="zSi-yM-npV"/>
                         </constraints>
                     </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="600"/>
                     <connections>
                         <outlet property="atitudeAndLongtitude" destination="ngp-jW-3EG" id="qxt-av-Btq"/>
                         <outlet property="imgBackground" destination="SH1-Hi-iYu" id="dNs-Gc-Pcd"/>

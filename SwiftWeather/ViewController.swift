@@ -14,7 +14,7 @@ let weatherServiceUrl = "http://api.openweathermap.org/data/2.5/weather"
 var errorLocationTimes = 0
 let transition = CATransition();
 
-class ViewController: UIViewController, CLLocationManagerDelegate {
+class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewDelegate {
     @IBOutlet weak var atitudeAndLongtitude: UILabel!
 
     @IBOutlet weak var labelCityName: UILabel!
@@ -103,11 +103,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             loadIndicator.stopAnimating()
             var temperature: Int
             if jsonResult["sys"]?["country"] as? String == "US" {
+                //美国用的是华氏度
                 temperature = Int(round(((tempResult - 273.15)*1.8) + 32))
+                labTemp.text = "\(temperature)ºF"
             } else {
+                //除美国之外用的是摄氏度
                 temperature = Int(round(tempResult-273.15))
+                labTemp.text = "\(temperature)ºC"
             }
-            labTemp.text = "\(temperature)ºC"
             let city = jsonResult["name"] as? String
             labelCityName.text = city
             
@@ -132,6 +135,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             loadIndicator.hidden = true
             loadIndicator.stopAnimating()
         }
+    }
+    
+    func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
+        print(scrollView.contentOffset.x,scrollView.contentOffset.y)
+        print(scrollView.contentSize.width,scrollView.contentSize.height)
     }
     
     //根据代码和是否晚上更新天气图标
