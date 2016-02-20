@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="QGo-sZ-IW4">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="QGo-sZ-IW4">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nSc-Oj-g5q">
@@ -27,7 +27,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="下拉刷新" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E6d-dB-Wns">
                                         <rect key="frame" x="278" y="-41" width="68" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="s16-0S-ZXO">
@@ -139,9 +139,11 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="RNl-aR-UMy" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="2Pz-fM-drl"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="QGo-sZ-IW4" secondAttribute="trailing" constant="-20" id="5Jm-05-A4H"/>
                             <constraint firstItem="kRC-dX-3hi" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="5zq-YG-dr5"/>
                             <constraint firstAttribute="trailingMargin" secondItem="nSc-Oj-g5q" secondAttribute="trailing" constant="-20" id="Dpx-bG-THP"/>
                             <constraint firstItem="kRC-dX-3hi" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="FLg-w9-8lc"/>
+                            <constraint firstItem="QGo-sZ-IW4" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="PG0-eh-Yd9"/>
                             <constraint firstItem="RNl-aR-UMy" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="RsS-7U-6QN"/>
                             <constraint firstItem="imO-Nz-rVn" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="Ttz-vb-kVC"/>
                             <constraint firstItem="imO-Nz-rVn" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="afp-hL-mlx"/>
@@ -150,7 +152,9 @@
                             <constraint firstItem="RNl-aR-UMy" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="gOw-MV-wqa"/>
                             <constraint firstItem="nSc-Oj-g5q" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="gqK-wl-RfC"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="nSc-Oj-g5q" secondAttribute="bottom" id="hAG-sH-EKl"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="QGo-sZ-IW4" secondAttribute="bottom" id="ouS-rC-pSl"/>
                             <constraint firstItem="imO-Nz-rVn" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="t9E-aJ-fTh"/>
+                            <constraint firstItem="QGo-sZ-IW4" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="thi-Rs-pZ5"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -160,11 +164,14 @@
                         <outlet property="containerView" destination="SkS-nb-egZ" id="rNq-Qm-t0b"/>
                         <outlet property="firstView" destination="RNl-aR-UMy" id="8uT-fm-lNu"/>
                         <outlet property="firstViewLeading" destination="2Pz-fM-drl" id="PlB-ZP-ddh"/>
+                        <outlet property="imgBackground" destination="QGo-sZ-IW4" id="BdF-LH-okZ"/>
                         <outlet property="imgIcon" destination="RDq-YY-YOL" id="jLt-O3-2wQ"/>
                         <outlet property="labTemp" destination="h7F-hM-B9U" id="gJ3-i0-Nxp"/>
                         <outlet property="labelCityName" destination="ucP-dj-I3V" id="tXv-Wz-hWg"/>
                         <outlet property="loadIndicator" destination="8bY-lD-urk" id="kmg-FP-dYc"/>
                         <outlet property="loading" destination="OKY-VA-uFi" id="OR4-QX-FqP"/>
+                        <outlet property="pullRefreshActivityIndicator" destination="s16-0S-ZXO" id="rik-5w-kPc"/>
+                        <outlet property="pullRefreshLabel" destination="E6d-dB-Wns" id="vdg-FL-Ion"/>
                         <outlet property="scrollView" destination="nSc-Oj-g5q" id="TPZ-Hw-Mqr"/>
                         <outlet property="secondView" destination="kRC-dX-3hi" id="GD2-on-W1p"/>
                         <outlet property="secondViewLeading" destination="c1s-05-hy3" id="Vbw-li-8b7"/>
@@ -180,7 +187,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="background" width="1000" height="667"/>
+        <image name="background" width="1080" height="1920"/>
         <image name="cloudy2" width="128" height="128"/>
     </resources>
 </document>

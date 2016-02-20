@@ -49,6 +49,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
     
     @IBOutlet weak var scrollView: UIScrollView!
     
+    @IBOutlet weak var pullRefreshLabel: UILabel!
+    
+    @IBOutlet weak var pullRefreshActivityIndicator: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -85,12 +89,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location: CLLocation = locations[locations.count-1] as CLLocation
         if location.horizontalAccuracy>0 {
-            print("latitude:\(location.coordinate.latitude)")
-            print("longtitude:\(location.coordinate.longitude)")
+            locationManager.stopUpdatingLocation()
             atitudeAndLongtitude.text = "\(location.coordinate.latitude),\(location.coordinate.longitude)"
             updateWeatherInfo(location.coordinate.latitude,longtitude: location.coordinate.longitude)
         }
-        locationManager.stopUpdatingLocation()
     }
     
     //CLLocationManager delegate方法,获取地理位置信息出错时回调
@@ -150,13 +152,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
             var nightTime = false
             let now = NSDate().timeIntervalSince1970
             
-//            self.imgBackground.layer.addAnimation(transition, forKey: nil)
+            self.imgBackground.layer.addAnimation(transition, forKey: nil)
             if Int(now)<sunrise||Int(now)>sunset {
                 nightTime = true
-//                self.imgBackground.image = UIImage(named: "background_night")
+                self.imgBackground.image = UIImage(named: "background_night")
             } else {
                 nightTime = false
-//                self.imgBackground.image = UIImage(named: "background")
+                self.imgBackground.image = UIImage(named: "background")
             }
             self.updateWeatherIcon(condition, nightTime: nightTime)
         } else {
@@ -242,21 +244,34 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
         }
     }
     
-    func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
-        print(scrollView.contentOffset.x,scrollView.contentOffset.y)
-        print(scrollView.contentSize.width,scrollView.contentSize.height)
-    }
-    
     override func updateViewConstraints() {
         super.updateViewConstraints()
-        print(CGRectGetHeight(UIScreen.mainScreen().bounds))
-        print(CGRectGetWidth(UIScreen.mainScreen().bounds))
         viewWidth.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)*3
         //为了让垂直方向上有弹性只好+1,目前还没找到更好的办法.
         viewHeight.constant = CGRectGetHeight(UIScreen.mainScreen().bounds)+1
         firstViewLeading.constant = -20.0
         secondViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)-20.0
         thirdViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)*2-20.0
+    }
+    
+    //scrollview delegate
+    func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y < -50 ) {
+            pullRefreshLabel.text = "下拉刷新"
+            UIView.animateWithDuration(1.0, animations: { () -> Void in
+                scrollView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+                }, completion: { (finished) -> Void in
+                    print("要慢了")
+            })
+        }
+    }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        print("滚了")
+        if( scrollView.contentOffset.y < -50){
+            pullRefreshLabel.text = "松开刷新"
+        } else {
+        }
     }
 }
 
