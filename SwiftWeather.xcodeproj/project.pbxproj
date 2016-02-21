@@ -13,6 +13,7 @@
 		CE00A1A11C763581004A8056 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE00A1A01C763581004A8056 /* Assets.xcassets */; };
 		CE00A1A41C763581004A8056 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE00A1A21C763581004A8056 /* LaunchScreen.storyboard */; };
 		CE00A1AC1C763837004A8056 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE00A1AB1C763837004A8056 /* ViewController.swift */; };
+		CE96A4211C793E5F0058F87E /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE96A4201C793E5F0058F87E /* RefreshView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		CE00A1A31C763581004A8056 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CE00A1A51C763581004A8056 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE00A1AB1C763837004A8056 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		CE96A4201C793E5F0058F87E /* RefreshView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
 		CEB7F0401C763CC70043A8FD /* SwiftWeather-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftWeather-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,6 +64,7 @@
 		CE00A1981C763581004A8056 /* SwiftWeather */ = {
 			isa = PBXGroup;
 			children = (
+				CE96A4201C793E5F0058F87E /* RefreshView.swift */,
 				CE00A1991C763581004A8056 /* AppDelegate.swift */,
 				CE00A1AB1C763837004A8056 /* ViewController.swift */,
 				CE00A19D1C763581004A8056 /* Main.storyboard */,
@@ -213,6 +216,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE96A4211C793E5F0058F87E /* RefreshView.swift in Sources */,
 				CE00A1AC1C763837004A8056 /* ViewController.swift in Sources */,
 				CE00A19A1C763581004A8056 /* AppDelegate.swift in Sources */,
 			);

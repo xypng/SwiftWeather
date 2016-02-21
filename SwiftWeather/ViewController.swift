@@ -12,70 +12,55 @@ import CoreLocation
 let apikey = "81c95577f51e8ad0d9174e71edb43e2c"
 let weatherServiceUrl = "http://api.openweathermap.org/data/2.5/weather"
 
-class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewDelegate {
-    var errorLocationTimes = 0
-    let transition = CATransition()
-    let locationManager = CLLocationManager()
+class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewDelegate, RefreshViewDelegate {
     
     @IBOutlet weak var atitudeAndLongtitude: UILabel!
-
     @IBOutlet weak var labelCityName: UILabel!
-    
     @IBOutlet weak var imgIcon: UIImageView!
-    
     @IBOutlet weak var labTemp: UILabel!
-    
     @IBOutlet weak var loading: UILabel!
-    @IBOutlet weak var loadIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imgBackground: UIImageView!
     
     @IBOutlet weak var viewWidth: NSLayoutConstraint!
-    
     @IBOutlet weak var viewHeight: NSLayoutConstraint!
-    
     @IBOutlet weak var firstViewLeading: NSLayoutConstraint!
-    
     @IBOutlet weak var secondViewLeading: NSLayoutConstraint!
-    
     @IBOutlet weak var thirdViewLeading: NSLayoutConstraint!
     
     @IBOutlet weak var firstView: UIView!
-    
     @IBOutlet weak var secondView: UIView!
-    
     @IBOutlet weak var thirdView: UIView!
-    
     @IBOutlet weak var containerView: UIView!
-    
     @IBOutlet weak var scrollView: UIScrollView!
     
-    @IBOutlet weak var pullRefreshLabel: UILabel!
-    
-    @IBOutlet weak var pullRefreshActivityIndicator: UIActivityIndicatorView!
+    var errorLocationTimes = 0//获取地理位置信息已经出错的交数
+    let transition = CATransition()//图片渐变动画
+    let locationManager = CLLocationManager()//
+    var refreshView: RefreshView!
+    var isGetWeather = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        firstView.backgroundColor = UIColor().colorWithAlphaComponent(0)
-        secondView.backgroundColor = UIColor().colorWithAlphaComponent(0)
-        thirdView.backgroundColor = UIColor().colorWithAlphaComponent(0)
-        containerView.backgroundColor = UIColor().colorWithAlphaComponent(0)
-        scrollView.backgroundColor = UIColor().colorWithAlphaComponent(0)
+        self.alphaScrollViewbackground()
         
-        transition.type = "fade";
-        transition.duration = 1.0;
-        transition.timingFunction = CAMediaTimingFunction(name: "easeIn")
-        transition.fillMode = "forwards"
+        self.addAnimationImage()
         
-        loadIndicator.startAnimating()
+        self.addRefreshView()
         
+        self.addLocation()
         
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        if (ios8()) {
-            locationManager.requestAlwaysAuthorization()
-        }
-        locationManager.startUpdatingLocation()
+        self.refreshWeather()
+    }
+    
+    override func updateViewConstraints() {
+        super.updateViewConstraints()
+        viewWidth.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)*3
+        //为了让垂直方向上有弹性只好+1,目前还没找到更好的办法.
+        viewHeight.constant = CGRectGetHeight(UIScreen.mainScreen().bounds)+1
+        firstViewLeading.constant = -20.0
+        secondViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)-20.0
+        thirdViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)*2-20.0
     }
 
     //是否ios8以上的系统
@@ -85,44 +70,44 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
         return Int(systemvesion.substringToIndex(index))>=8
     }
     
-    //CLLocationManager delegate方法,获取地理位置信息成功时回调
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location: CLLocation = locations[locations.count-1] as CLLocation
-        if location.horizontalAccuracy>0 {
-            locationManager.stopUpdatingLocation()
-            atitudeAndLongtitude.text = "\(location.coordinate.latitude),\(location.coordinate.longitude)"
-            updateWeatherInfo(location.coordinate.latitude,longtitude: location.coordinate.longitude)
-        }
+    //使背景变透明,这样才能看到最后面的图片,并且活动时图片不会动
+    func alphaScrollViewbackground() {
+        firstView.backgroundColor = UIColor().colorWithAlphaComponent(0)
+        secondView.backgroundColor = UIColor().colorWithAlphaComponent(0)
+        thirdView.backgroundColor = UIColor().colorWithAlphaComponent(0)
+        containerView.backgroundColor = UIColor().colorWithAlphaComponent(0)
+        scrollView.backgroundColor = UIColor().colorWithAlphaComponent(0)
     }
     
-    //CLLocationManager delegate方法,获取地理位置信息出错时回调
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        print(error)
-        errorLocationTimes++
-        //最多重试获取地理位置信息3次
-        if errorLocationTimes<=3 {
-            locationManager.startUpdatingLocation()
-        } else {
-            locationManager.stopUpdatingLocation()
-            //提示用户检查网络
-            loading.text = "获取地理位置信息失败,请检查设置!"
-            loadIndicator.hidden = true
-            loadIndicator.stopAnimating()
-        }
+    //添加图片渐变动画
+    func addAnimationImage() {
+        transition.type = "fade";
+        transition.duration = 1.0;
+        transition.timingFunction = CAMediaTimingFunction(name: "easeIn")
+        transition.fillMode = "forwards"
+    }
+    
+    func addRefreshView() {
+        let refreshHeight:CGFloat = 60
+        let refreshRect = CGRectMake(0, -refreshHeight, CGRectGetWidth(self.view.frame), refreshHeight)
+        refreshView = RefreshView(frame: refreshRect, scrollView: scrollView)
+        refreshView.delegate = self
+        firstView.addSubview(refreshView)
     }
     
     //根据经纬度获取天气数据(json)
     func updateWeatherInfo(latitude:CLLocationDegrees, longtitude:CLLocationDegrees) {
         let manager = AFHTTPRequestOperationManager()
         let parameter = ["lat":latitude, "lon":longtitude, "appid":apikey]
+        self.isGetWeather = true
         manager.GET(weatherServiceUrl, parameters: parameter, success: { (operation:AFHTTPRequestOperation!, responseObject:AnyObject!) -> Void in
-                print("JSON:\(responseObject.description)")
-                self.updateUISuccess(responseObject as! NSDictionary!)
+            self.updateUISuccess(responseObject as! NSDictionary!)
+            self.isGetWeather = false
             }) { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
-                print("Error:\(error.localizedDescription)")
-                self.loadIndicator.hidden = true
-                self.loadIndicator.stopAnimating()
+                print("获取天气信息失败Error:\(error.localizedDescription)")
                 self.loading.text = "获取天气信息失败,请检查网络!"
+                self.loading.hidden = false
+                self.isGetWeather = false
         }
     }
     
@@ -130,8 +115,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
     func updateUISuccess(jsonResult: NSDictionary!) {
         if let tempResult = jsonResult["main"]?["temp"] as? Double {
             loading.hidden = true
-            loadIndicator.hidden = true
-            loadIndicator.stopAnimating()
             var temperature: Int
             if jsonResult["sys"]?["country"] as? String == "US" {
                 //美国用的是华氏度
@@ -161,10 +144,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
                 self.imgBackground.image = UIImage(named: "background")
             }
             self.updateWeatherIcon(condition, nightTime: nightTime)
+            print("已经刷新天气")
+            refreshView.labRefresh.text = "刷新成功"
+            refreshView.activityIndicator.stopAnimating()
         } else {
             loading.text = "解析天气数据失败!"
-            loadIndicator.hidden = true
-            loadIndicator.stopAnimating()
         }
     }
     
@@ -244,33 +228,60 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
         }
     }
     
-    override func updateViewConstraints() {
-        super.updateViewConstraints()
-        viewWidth.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)*3
-        //为了让垂直方向上有弹性只好+1,目前还没找到更好的办法.
-        viewHeight.constant = CGRectGetHeight(UIScreen.mainScreen().bounds)+1
-        firstViewLeading.constant = -20.0
-        secondViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)-20.0
-        thirdViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)*2-20.0
-    }
-    
-    //scrollview delegate
-    func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y < -50 ) {
-            pullRefreshLabel.text = "下拉刷新"
-            UIView.animateWithDuration(1.0, animations: { () -> Void in
-                scrollView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
-                }, completion: { (finished) -> Void in
-                    print("要慢了")
-            })
+    func addLocation() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        if (ios8()) {
+            locationManager.requestAlwaysAuthorization()
         }
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        print("滚了")
-        if( scrollView.contentOffset.y < -50){
-            pullRefreshLabel.text = "松开刷新"
+    func refreshWeather() {
+        locationManager.startUpdatingLocation()
+    }
+    
+// MARK: - CLLocationManagerDelegate
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        locationManager.stopUpdatingLocation()
+        if isGetWeather {
+            return
+        }
+        let location: CLLocation = locations[locations.count-1] as CLLocation
+        if location.horizontalAccuracy>0 {
+            print("lotitude")
+            atitudeAndLongtitude.text = "\(location.coordinate.latitude),\(location.coordinate.longitude)"
+            updateWeatherInfo(location.coordinate.latitude,longtitude: location.coordinate.longitude)
+        }
+    }
+
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        print(error)
+        errorLocationTimes++
+        //最多重试获取地理位置信息3次
+        if errorLocationTimes<=3 {
+            locationManager.startUpdatingLocation()
         } else {
+            locationManager.stopUpdatingLocation()
+            //提示用户检查网络
+            print("获取地理位置信息失败")
+            loading.text = "获取地理位置信息失败,请检查设置!"
+        }
+    }
+//MARK: - UIScrollViewDelegate
+    func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        self.refreshView.scrollViewWillEndDragging(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
+    }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        self.refreshView.scrollViewDidScroll(scrollView)
+    }
+//MARK: - RefreshViewDelegate
+    func refreshViewDidRefresh(refreshView: RefreshView) {
+        print("停住3秒")
+        locationManager.startUpdatingLocation()
+        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(3*NSEC_PER_SEC))
+        dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
+            refreshView.endRefreshing()
         }
     }
 }

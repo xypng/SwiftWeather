@@ -24,15 +24,6 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nSc-Oj-g5q">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="下拉刷新" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E6d-dB-Wns">
-                                        <rect key="frame" x="278" y="-41" width="68" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="s16-0S-ZXO">
-                                        <rect key="frame" x="254" y="-40" width="20" height="20"/>
-                                    </activityIndicatorView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SkS-nb-egZ" userLabel="ContainerView">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                         <subviews>
@@ -45,9 +36,6 @@
                                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="8bY-lD-urk">
-                                                        <rect key="frame" x="281" y="113" width="37" height="37"/>
-                                                    </activityIndicatorView>
                                                     <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="cloudy2" translatesAutoresizingMaskIntoConstraints="NO" id="RDq-YY-YOL">
                                                         <rect key="frame" x="236" y="68" width="128" height="128"/>
                                                         <constraints>
@@ -77,8 +65,6 @@
                                                 <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="bottom" secondItem="Af4-JC-dUq" secondAttribute="bottom" constant="8" id="0cB-tB-2M5"/>
-                                                    <constraint firstItem="8bY-lD-urk" firstAttribute="centerX" secondItem="RNl-aR-UMy" secondAttribute="centerX" id="3Qn-gB-TYG"/>
-                                                    <constraint firstItem="8bY-lD-urk" firstAttribute="leading" secondItem="ucP-dj-I3V" secondAttribute="trailing" constant="-78" id="3dg-KU-16L"/>
                                                     <constraint firstAttribute="trailing" secondItem="Af4-JC-dUq" secondAttribute="trailing" constant="8" id="85h-Xm-CKm"/>
                                                     <constraint firstItem="OKY-VA-uFi" firstAttribute="top" secondItem="RDq-YY-YOL" secondAttribute="bottom" constant="90" id="8Rw-B4-fQ6"/>
                                                     <constraint firstItem="h7F-hM-B9U" firstAttribute="top" secondItem="RDq-YY-YOL" secondAttribute="bottom" constant="8" id="DDH-uy-SWj"/>
@@ -88,7 +74,6 @@
                                                     <constraint firstItem="OKY-VA-uFi" firstAttribute="centerX" secondItem="RNl-aR-UMy" secondAttribute="centerX" id="bqs-Sh-VBH"/>
                                                     <constraint firstItem="ucP-dj-I3V" firstAttribute="top" secondItem="RNl-aR-UMy" secondAttribute="top" constant="27" id="erg-iQ-Hf9"/>
                                                     <constraint firstItem="RDq-YY-YOL" firstAttribute="centerX" secondItem="RNl-aR-UMy" secondAttribute="centerX" id="hcr-Im-sPu"/>
-                                                    <constraint firstItem="8bY-lD-urk" firstAttribute="top" secondItem="ucP-dj-I3V" secondAttribute="bottom" constant="53" id="imf-UF-TjW"/>
                                                     <constraint firstItem="h7F-hM-B9U" firstAttribute="leading" secondItem="RDq-YY-YOL" secondAttribute="trailing" constant="-118" id="sXV-Ky-3gi"/>
                                                     <constraint firstItem="h7F-hM-B9U" firstAttribute="centerX" secondItem="RNl-aR-UMy" secondAttribute="centerX" id="unu-5E-IWx"/>
                                                     <constraint firstItem="ucP-dj-I3V" firstAttribute="centerX" secondItem="RNl-aR-UMy" secondAttribute="centerX" id="zJe-Up-Yb1"/>
@@ -96,7 +81,6 @@
                                                 <variation key="default">
                                                     <mask key="constraints">
                                                         <exclude reference="Ugf-A4-VkM"/>
-                                                        <exclude reference="3dg-KU-16L"/>
                                                         <exclude reference="sXV-Ky-3gi"/>
                                                     </mask>
                                                 </variation>
@@ -125,11 +109,7 @@
                                     <constraint firstItem="SkS-nb-egZ" firstAttribute="top" secondItem="nSc-Oj-g5q" secondAttribute="top" id="Dto-h0-mn0"/>
                                     <constraint firstItem="SkS-nb-egZ" firstAttribute="leading" secondItem="nSc-Oj-g5q" secondAttribute="leading" id="FZy-ta-6vt"/>
                                     <constraint firstAttribute="trailing" secondItem="SkS-nb-egZ" secondAttribute="trailing" id="JXP-e5-uxF"/>
-                                    <constraint firstAttribute="top" secondItem="E6d-dB-Wns" secondAttribute="bottom" constant="20" id="UzN-ej-iaX"/>
-                                    <constraint firstAttribute="top" secondItem="s16-0S-ZXO" secondAttribute="bottom" constant="20" id="YeR-zk-uFw"/>
-                                    <constraint firstItem="E6d-dB-Wns" firstAttribute="centerX" secondItem="nSc-Oj-g5q" secondAttribute="centerX" constant="12" id="aFD-m3-4xF"/>
                                     <constraint firstAttribute="bottom" secondItem="SkS-nb-egZ" secondAttribute="bottom" id="aSU-xf-jQR"/>
-                                    <constraint firstItem="s16-0S-ZXO" firstAttribute="centerX" secondItem="nSc-Oj-g5q" secondAttribute="centerX" constant="-36" id="dDG-oG-sIC"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="M9f-eg-DMQ"/>
@@ -168,10 +148,7 @@
                         <outlet property="imgIcon" destination="RDq-YY-YOL" id="jLt-O3-2wQ"/>
                         <outlet property="labTemp" destination="h7F-hM-B9U" id="gJ3-i0-Nxp"/>
                         <outlet property="labelCityName" destination="ucP-dj-I3V" id="tXv-Wz-hWg"/>
-                        <outlet property="loadIndicator" destination="8bY-lD-urk" id="kmg-FP-dYc"/>
                         <outlet property="loading" destination="OKY-VA-uFi" id="OR4-QX-FqP"/>
-                        <outlet property="pullRefreshActivityIndicator" destination="s16-0S-ZXO" id="rik-5w-kPc"/>
-                        <outlet property="pullRefreshLabel" destination="E6d-dB-Wns" id="vdg-FL-Ion"/>
                         <outlet property="scrollView" destination="nSc-Oj-g5q" id="TPZ-Hw-Mqr"/>
                         <outlet property="secondView" destination="kRC-dX-3hi" id="GD2-on-W1p"/>
                         <outlet property="secondViewLeading" destination="c1s-05-hy3" id="Vbw-li-8b7"/>
