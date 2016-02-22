@@ -12,7 +12,7 @@ import CoreLocation
 let apikey = "81c95577f51e8ad0d9174e71edb43e2c"
 let weatherServiceUrl = "http://api.openweathermap.org/data/2.5/weather"
 
-class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewDelegate, RefreshViewDelegate {
+class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewDelegate, RefreshViewDelegate, WeatherServiceDelegate {
     
     @IBOutlet weak var atitudeAndLongtitude: UILabel!
     @IBOutlet weak var labelCityName: UILabel!
@@ -35,10 +35,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
     @IBOutlet weak var scrollView: UIScrollView!
     
     var errorLocationTimes = 0//获取地理位置信息已经出错的交数
-    let transition = CATransition()//图片渐变动画
     let locationManager = CLLocationManager()//
     var refreshView: RefreshView!
     var isGetWeather = false
+    let weatherService = WeatherService()
     
     @IBAction func pageChanged(sender: UIPageControl) {
         let page = Int(sender.currentPage)
@@ -51,13 +51,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
         
         self.alphaScrollViewbackground()
         
-        self.addAnimationImage()
-        
         self.addRefreshView()
         
-        self.addLocation()
+        self.addLocationManager()
         
-        self.refreshWeather()
+        self.reloadWeather()
+        
+        self.weatherService.delegate = self
     }
     
     override func updateViewConstraints() {
@@ -68,13 +68,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
         secondViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)-20.0
         thirdViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)*2-20.0
     }
-
-    //是否ios8以上的系统
-    func ios8() -> Bool {
-        let systemvesion = UIDevice.currentDevice().systemVersion
-        let index = systemvesion.startIndex.advancedBy(1)
-        return Int(systemvesion.substringToIndex(index))>=8
-    }
     
     //使背景变透明,这样才能看到最后面的图片,并且活动时图片不会动
     func alphaScrollViewbackground() {
@@ -83,30 +76,22 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
         thirdView.backgroundColor = UIColor().colorWithAlphaComponent(0)
         containerView.backgroundColor = UIColor().colorWithAlphaComponent(0)
         scrollView.backgroundColor = UIColor().colorWithAlphaComponent(0)
-        scrollView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
-        containerView.frame = CGRectMake(0, 0, self.view.frame.width*3, self.view.frame.height)
-        firstView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
-        secondView.frame = CGRectMake(self.view.frame.width, 0, self.view.frame.width, self.view.frame.height)
-        thirdView.frame = CGRectMake(self.view.frame.width*2, 0, self.view.frame.width, self.view.frame.height)
-        scrollView.contentSize = CGSize(width: self.view.frame.width*3, height: self.view.frame.height)
-        scrollView.contentOffset = CGPoint(x: 0, y: 0)
-        print("view.frame: \(view.frame)")
-        print("scrollView.frame: \(scrollView.frame)")
-        print("containerView.frame: \(containerView.frame)")
-        print("firstView.frame: \(firstView.frame)")
-        print("secondView.frame: \(secondView.frame)")
-        print("thirdView.frame: \(thirdView.frame)")
-        print("scrollView.contentSize: \(scrollView.contentSize)")
-        print("scrollView.contentOffset: \(scrollView.contentOffset)")
-        print("scrollView.bounds.size: \(scrollView.bounds.size)")
-    }
-    
-    //添加图片渐变动画
-    func addAnimationImage() {
-        transition.type = "fade";
-        transition.duration = 1.0;
-        transition.timingFunction = CAMediaTimingFunction(name: "easeIn")
-        transition.fillMode = "forwards"
+//        scrollView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
+//        containerView.frame = CGRectMake(0, 0, self.view.frame.width*3, self.view.frame.height)
+//        firstView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
+//        secondView.frame = CGRectMake(self.view.frame.width, 0, self.view.frame.width, self.view.frame.height)
+//        thirdView.frame = CGRectMake(self.view.frame.width*2, 0, self.view.frame.width, self.view.frame.height)
+//        scrollView.contentSize = CGSize(width: self.view.frame.width*3, height: self.view.frame.height)
+//        scrollView.contentOffset = CGPoint(x: 0, y: 0)
+//        print("view.frame: \(view.frame)")
+//        print("scrollView.frame: \(scrollView.frame)")
+//        print("containerView.frame: \(containerView.frame)")
+//        print("firstView.frame: \(firstView.frame)")
+//        print("secondView.frame: \(secondView.frame)")
+//        print("thirdView.frame: \(thirdView.frame)")
+//        print("scrollView.contentSize: \(scrollView.contentSize)")
+//        print("scrollView.contentOffset: \(scrollView.contentOffset)")
+//        print("scrollView.bounds.size: \(scrollView.bounds.size)")
     }
     
     func addRefreshView() {
@@ -117,154 +102,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
         firstView.addSubview(refreshView)
     }
     
-    //根据经纬度获取天气数据(json)
-    func updateWeatherInfo(latitude:CLLocationDegrees, longtitude:CLLocationDegrees) {
-        let manager = AFHTTPRequestOperationManager()
-        let parameter = ["lat":latitude, "lon":longtitude, "appid":apikey]
-        self.isGetWeather = true
-        manager.GET(weatherServiceUrl, parameters: parameter, success: { (operation:AFHTTPRequestOperation!, responseObject:AnyObject!) -> Void in
-            self.updateUISuccess(responseObject as! NSDictionary!)
-            self.isGetWeather = false
-            }) { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
-                print("获取天气信息失败Error:\(error.localizedDescription)")
-                self.loading.text = "获取天气信息失败,请检查网络!"
-                self.loading.hidden = false
-                self.refreshView.labRefresh.text = "刷新失败"
-                self.isGetWeather = false
-                self.keepRefresh()
-        }
-    }
-    
-    //解析json数据并更新页面上的天气温度等
-    func updateUISuccess(jsonResult: NSDictionary!) {
-        if let tempResult = jsonResult["main"]?["temp"] as? Double {
-            loading.hidden = true
-            var temperature: Int
-            if jsonResult["sys"]?["country"] as? String == "US" {
-                //美国用的是华氏度
-                temperature = Int(round(((tempResult - 273.15)*1.8) + 32))
-                labTemp.text = "\(temperature)ºF"
-            } else {
-                //除美国之外用的是摄氏度
-                temperature = Int(round(tempResult-273.15))
-                labTemp.text = "\(temperature)ºC"
-            }
-            let city = jsonResult["name"] as? String
-            labelCityName.text = city
-            
-            let condition = jsonResult["weather"]?[0]?["id"] as? Int
-            let sunrise = jsonResult["sys"]?["sunrise"] as? Int
-            let sunset = jsonResult["sys"]?["sunset"] as? Int
-            
-            var nightTime = false
-            let now = NSDate().timeIntervalSince1970
-            
-            self.imgBackground.layer.addAnimation(transition, forKey: nil)
-            if Int(now)<sunrise||Int(now)>sunset {
-                nightTime = true
-                self.imgBackground.image = UIImage(named: "background_night")
-            } else {
-                nightTime = false
-                self.imgBackground.image = UIImage(named: "background")
-            }
-            self.updateWeatherIcon(condition, nightTime: nightTime)
-            print("已经刷新天气")
-            refreshView.labRefresh.text = "刷新成功"
-            refreshView.activityIndicator.stopAnimating()
-            keepRefresh()
-        } else {
-            loading.text = "解析天气数据失败!"
-            loading.hidden = false
-            self.refreshView.labRefresh.text = "刷新失败"
-            keepRefresh()
-        }
-    }
-    
-    //根据代码和是否晚上更新天气图标
-    func updateWeatherIcon(condition: Int?, nightTime: Bool) {
-        self.imgIcon.layer.addAnimation(transition, forKey: nil)
-        // Thunderstorm
-        if (condition < 300) {
-            if nightTime {
-                imgIcon.image = UIImage(named: "tstorm1_night")
-            } else {
-                imgIcon.image = UIImage(named: "tstorm1")
-            }
-        }
-            // Drizzle
-        else if (condition < 500) {
-            imgIcon.image = UIImage(named: "light_rain")
-            
-        }
-            // Rain / Freezing rain / Shower rain
-        else if (condition < 600) {
-            imgIcon.image = UIImage(named: "shower3")
-        }
-            // Snow
-        else if (condition < 700) {
-            imgIcon.image = UIImage(named: "snow4")
-        }
-            // Fog / Mist / Haze / etc.
-        else if (condition < 771) {
-            if nightTime {
-                imgIcon.image = UIImage(named: "fog_night")
-            } else {
-                imgIcon.image = UIImage(named: "fog")
-            }
-        }
-            // Tornado / Squalls
-        else if (condition < 800) {
-            imgIcon.image = UIImage(named: "tstorm3")
-        }
-            // Sky is clear
-        else if (condition == 800) {
-            if (nightTime){
-                imgIcon.image = UIImage(named: "sunny_night")
-            }
-            else {
-                imgIcon.image = UIImage(named: "sunny")
-            }
-        }
-            // few / scattered / broken clouds
-        else if (condition < 804) {
-            if (nightTime){
-                imgIcon.image = UIImage(named: "cloudy2_night")
-            }
-            else{
-                imgIcon.image = UIImage(named: "cloudy2")
-            }
-        }
-            // overcast clouds
-        else if (condition == 804) {
-            imgIcon.image = UIImage(named: "overcast")
-        }
-            // Extreme
-        else if ((condition >= 900 && condition < 903) || (condition > 904 && condition < 1000)) {
-            imgIcon.image = UIImage(named: "tstorm3")
-        }
-            // Cold
-        else if (condition == 903) {
-            imgIcon.image = UIImage(named: "snow5")
-        }
-            // Hot
-        else if (condition == 904) {
-            imgIcon.image = UIImage(named: "sunny")
-        }
-            // Weather condition is not available
-        else {
-            imgIcon.image = UIImage(named: "dunno")
-        }
-    }
-    
-    func addLocation() {
+    func addLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        if (ios8()) {
+        if (Tools.iOS8Beyound()) {
             locationManager.requestAlwaysAuthorization()
         }
     }
     
-    func refreshWeather() {
+    func reloadWeather() {
         locationManager.startUpdatingLocation()
     }
     
@@ -276,9 +122,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
         }
         let location: CLLocation = locations[locations.count-1] as CLLocation
         if location.horizontalAccuracy>0 {
-            print("lotitude")
+            print("(\(location.coordinate.latitude),\(location.coordinate.longitude))")
             atitudeAndLongtitude.text = "\(location.coordinate.latitude),\(location.coordinate.longitude)"
-            updateWeatherInfo(location.coordinate.latitude,longtitude: location.coordinate.longitude)
+            self.isGetWeather = true
+            weatherService.updateWeatherInfo(location.coordinate.latitude,longtitude: location.coordinate.longitude)
         }
     }
 
@@ -320,13 +167,69 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
     
     func keepRefresh() {
         if refreshView.isRefreshing {
-            print("停住3秒")
+            print("停住2秒")
             let time = dispatch_time(DISPATCH_TIME_NOW, Int64(2*NSEC_PER_SEC))
             dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
                 self.refreshView.endRefreshing()
-                print(3333)
             }
         }
+    }
+//MARK: - WeatherServiceDelegate
+    func weatherServiceSuccess(operation: AFHTTPRequestOperation!, responseObject: AnyObject!) {
+        print(responseObject)
+        self.isGetWeather = false
+        let jsonManager = JsonManager()
+        let weatherModel = jsonManager.weatherModelByJsonResult(responseObject as? NSDictionary!)
+
+        if let tem = weatherModel.temp {
+            labTemp.text = tem
+        } else {
+            self.errorJson()
+            return
+        }
+        if let city = weatherModel.cityName {
+            labelCityName.text = city
+        } else {
+            self.errorJson()
+            return
+        }
+        
+        if let isnight = weatherModel.isNight {
+            weatherService.updateWeatherBackground(imgBackground, nightTime: isnight)
+        } else {
+            errorJson()
+            return
+        }
+        
+        if let isnight = weatherModel.isNight, weatherid = weatherModel.weatherId {
+            weatherService.updateWeatherIcon(weatherid
+            , nightTime: isnight, imgIcon: imgIcon)
+        } else {
+            self.errorJson()
+            return
+        }
+        self.loading.hidden = true
+        print("已经刷新天气")
+        refreshView.labRefresh.text = "刷新成功"
+        refreshView.activityIndicator.stopAnimating()
+        keepRefresh()
+    }
+    
+    func weatherServiceError(operation: AFHTTPRequestOperation!, error: NSError!) {
+        print("获取天气信息失败Error:\(error.localizedDescription)")
+        self.isGetWeather = false
+        self.loading.text = "获取天气信息失败,请检查网络!"
+        self.loading.hidden = false
+        self.refreshView.labRefresh.text = "刷新失败"
+        self.keepRefresh()
+    }
+    
+    func errorJson() {
+        loading.text = "解析天气数据失败!"
+        loading.hidden = false
+        self.refreshView.labRefresh.text = "刷新失败"
+        self.refreshView.activityIndicator.stopAnimating()
+        keepRefresh()
     }
 }
 
