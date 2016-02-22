@@ -20,6 +20,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
     @IBOutlet weak var labTemp: UILabel!
     @IBOutlet weak var loading: UILabel!
     @IBOutlet weak var imgBackground: UIImageView!
+    @IBOutlet weak var pageControl: UIPageControl!
     
     @IBOutlet weak var viewWidth: NSLayoutConstraint!
     @IBOutlet weak var viewHeight: NSLayoutConstraint!
@@ -39,6 +40,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
     var refreshView: RefreshView!
     var isGetWeather = false
     
+    @IBAction func pageChanged(sender: UIPageControl) {
+        let page = Int(sender.currentPage)
+        let offset = CGPoint(x: Int(CGRectGetWidth(UIScreen.mainScreen().bounds))*page, y: 0)
+        scrollView.setContentOffset(offset, animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -56,8 +63,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
     override func updateViewConstraints() {
         super.updateViewConstraints()
         viewWidth.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)*3
-        //为了让垂直方向上有弹性只好+1,目前还没找到更好的办法.
-        viewHeight.constant = CGRectGetHeight(UIScreen.mainScreen().bounds)+1
+        viewHeight.constant = CGRectGetHeight(UIScreen.mainScreen().bounds)
         firstViewLeading.constant = -20.0
         secondViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)-20.0
         thirdViewLeading.constant = CGRectGetWidth(UIScreen.mainScreen().bounds)*2-20.0
@@ -77,6 +83,22 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
         thirdView.backgroundColor = UIColor().colorWithAlphaComponent(0)
         containerView.backgroundColor = UIColor().colorWithAlphaComponent(0)
         scrollView.backgroundColor = UIColor().colorWithAlphaComponent(0)
+        scrollView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
+        containerView.frame = CGRectMake(0, 0, self.view.frame.width*3, self.view.frame.height)
+        firstView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
+        secondView.frame = CGRectMake(self.view.frame.width, 0, self.view.frame.width, self.view.frame.height)
+        thirdView.frame = CGRectMake(self.view.frame.width*2, 0, self.view.frame.width, self.view.frame.height)
+        scrollView.contentSize = CGSize(width: self.view.frame.width*3, height: self.view.frame.height)
+        scrollView.contentOffset = CGPoint(x: 0, y: 0)
+        print("view.frame: \(view.frame)")
+        print("scrollView.frame: \(scrollView.frame)")
+        print("containerView.frame: \(containerView.frame)")
+        print("firstView.frame: \(firstView.frame)")
+        print("secondView.frame: \(secondView.frame)")
+        print("thirdView.frame: \(thirdView.frame)")
+        print("scrollView.contentSize: \(scrollView.contentSize)")
+        print("scrollView.contentOffset: \(scrollView.contentOffset)")
+        print("scrollView.bounds.size: \(scrollView.bounds.size)")
     }
     
     //添加图片渐变动画
@@ -107,7 +129,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
                 print("获取天气信息失败Error:\(error.localizedDescription)")
                 self.loading.text = "获取天气信息失败,请检查网络!"
                 self.loading.hidden = false
+                self.refreshView.labRefresh.text = "刷新失败"
                 self.isGetWeather = false
+                self.keepRefresh()
         }
     }
     
@@ -147,8 +171,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
             print("已经刷新天气")
             refreshView.labRefresh.text = "刷新成功"
             refreshView.activityIndicator.stopAnimating()
+            keepRefresh()
         } else {
             loading.text = "解析天气数据失败!"
+            loading.hidden = false
+            self.refreshView.labRefresh.text = "刷新失败"
+            keepRefresh()
         }
     }
     
@@ -265,6 +293,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
             //提示用户检查网络
             print("获取地理位置信息失败")
             loading.text = "获取地理位置信息失败,请检查设置!"
+            loading.hidden = false
+            self.refreshView.labRefresh.text = "刷新失败"
+            keepRefresh()
         }
     }
 //MARK: - UIScrollViewDelegate
@@ -275,13 +306,26 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewD
     func scrollViewDidScroll(scrollView: UIScrollView) {
         self.refreshView.scrollViewDidScroll(scrollView)
     }
+    
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        print(scrollView.contentOffset)
+        print(scrollView.contentSize)
+        let page = scrollView.contentOffset.x/CGRectGetWidth(UIScreen.mainScreen().bounds)
+        pageControl.currentPage = Int(round(page))
+    }
 //MARK: - RefreshViewDelegate
     func refreshViewDidRefresh(refreshView: RefreshView) {
-        print("停住3秒")
         locationManager.startUpdatingLocation()
-        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(3*NSEC_PER_SEC))
-        dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
-            refreshView.endRefreshing()
+    }
+    
+    func keepRefresh() {
+        if refreshView.isRefreshing {
+            print("停住3秒")
+            let time = dispatch_time(DISPATCH_TIME_NOW, Int64(2*NSEC_PER_SEC))
+            dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
+                self.refreshView.endRefreshing()
+                print(3333)
+            }
         }
     }
 }

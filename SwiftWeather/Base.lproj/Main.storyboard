@@ -21,7 +21,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="QGo-sZ-IW4">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nSc-Oj-g5q">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nSc-Oj-g5q">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SkS-nb-egZ" userLabel="ContainerView">
@@ -115,6 +115,12 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="M9f-eg-DMQ"/>
                                 </connections>
                             </scrollView>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="ToB-3N-j1B">
+                                <rect key="frame" x="280" y="543" width="39" height="37"/>
+                                <connections>
+                                    <action selector="pageChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="o2a-vP-RBF"/>
+                                </connections>
+                            </pageControl>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -126,9 +132,11 @@
                             <constraint firstItem="QGo-sZ-IW4" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="PG0-eh-Yd9"/>
                             <constraint firstItem="RNl-aR-UMy" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="RsS-7U-6QN"/>
                             <constraint firstItem="imO-Nz-rVn" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="Ttz-vb-kVC"/>
+                            <constraint firstItem="ToB-3N-j1B" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Zo8-dY-kgi"/>
                             <constraint firstItem="imO-Nz-rVn" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="afp-hL-mlx"/>
                             <constraint firstItem="kRC-dX-3hi" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="c1s-05-hy3"/>
                             <constraint firstItem="nSc-Oj-g5q" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="eFU-E5-Xh1"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ToB-3N-j1B" secondAttribute="bottom" constant="20" id="evD-de-gb8"/>
                             <constraint firstItem="RNl-aR-UMy" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="gOw-MV-wqa"/>
                             <constraint firstItem="nSc-Oj-g5q" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="gqK-wl-RfC"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="nSc-Oj-g5q" secondAttribute="bottom" id="hAG-sH-EKl"/>
@@ -149,6 +157,7 @@
                         <outlet property="labTemp" destination="h7F-hM-B9U" id="gJ3-i0-Nxp"/>
                         <outlet property="labelCityName" destination="ucP-dj-I3V" id="tXv-Wz-hWg"/>
                         <outlet property="loading" destination="OKY-VA-uFi" id="OR4-QX-FqP"/>
+                        <outlet property="pageControl" destination="ToB-3N-j1B" id="d6j-c3-uMi"/>
                         <outlet property="scrollView" destination="nSc-Oj-g5q" id="TPZ-Hw-Mqr"/>
                         <outlet property="secondView" destination="kRC-dX-3hi" id="GD2-on-W1p"/>
                         <outlet property="secondViewLeading" destination="c1s-05-hy3" id="Vbw-li-8b7"/>
