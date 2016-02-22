@@ -32,7 +32,7 @@ class WeatherService: NSObject {
     func updateWeatherInfo(latitude:CLLocationDegrees, longtitude:CLLocationDegrees) {
         let manager = AFHTTPRequestOperationManager()
         let parameter = ["lat":latitude, "lon":longtitude, "appid":apikey]
-        manager.GET(weatherServiceCityUrl, parameters: parameter, success: { (operation:AFHTTPRequestOperation!, responseObject:AnyObject!) -> Void in
+        manager.GET(weatherServiceLocationUrl, parameters: parameter, success: { (operation:AFHTTPRequestOperation!, responseObject:AnyObject!) -> Void in
             if let adelegate=self.delegate {
                 adelegate.weatherServiceSuccess(operation, responseObject: responseObject)
             }
