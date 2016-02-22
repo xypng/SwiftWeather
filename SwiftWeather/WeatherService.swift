@@ -9,6 +9,11 @@
 import UIKit
 import CoreLocation
 
+let apikey = "81c95577f51e8ad0d9174e71edb43e2c"//天气服务的apikey
+let weatherServiceLocationUrl = "http://api.openweathermap.org/data/2.5/weather"//根据经纬度查天气的接口
+let weatherServiceCityUrl = "http://api.openweathermap.org/data/2.5/find?q=nan&type=like&sort=population&cnt=6&appid=44db6a862fba0b067b1930da0d769e98"//根据城市拼音摸糊查询天气的接口,cnt是返回的个数
+let cityCount = 6//城市名查天气时返回匹配个数
+
 protocol WeatherServiceDelegate {
     func weatherServiceSuccess(operation:AFHTTPRequestOperation!, responseObject:AnyObject!)
     func weatherServiceError(operation:AFHTTPRequestOperation!, error:NSError!)
@@ -27,8 +32,7 @@ class WeatherService: NSObject {
     func updateWeatherInfo(latitude:CLLocationDegrees, longtitude:CLLocationDegrees) {
         let manager = AFHTTPRequestOperationManager()
         let parameter = ["lat":latitude, "lon":longtitude, "appid":apikey]
-        print("\(weatherServiceUrl)&\(parameter.description)")
-        manager.GET(weatherServiceUrl, parameters: parameter, success: { (operation:AFHTTPRequestOperation!, responseObject:AnyObject!) -> Void in
+        manager.GET(weatherServiceCityUrl, parameters: parameter, success: { (operation:AFHTTPRequestOperation!, responseObject:AnyObject!) -> Void in
             if let adelegate=self.delegate {
                 adelegate.weatherServiceSuccess(operation, responseObject: responseObject)
             }

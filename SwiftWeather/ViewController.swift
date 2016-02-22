@@ -9,9 +9,6 @@
 import UIKit
 import CoreLocation
 
-let apikey = "81c95577f51e8ad0d9174e71edb43e2c"
-let weatherServiceUrl = "http://api.openweathermap.org/data/2.5/weather"
-
 class ViewController: UIViewController, CLLocationManagerDelegate, UIScrollViewDelegate, RefreshViewDelegate, WeatherServiceDelegate {
     
     @IBOutlet weak var atitudeAndLongtitude: UILabel!
