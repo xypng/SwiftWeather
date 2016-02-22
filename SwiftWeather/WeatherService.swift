@@ -18,6 +18,11 @@ class WeatherService: NSObject {
     var delegate:WeatherServiceDelegate?
     let transition = CATransition()//图片渐变动画
     
+    override init() {
+        super.init()
+        self.addImageAnimation()
+    }
+    
     //根据经纬度获取天气数据(json)
     func updateWeatherInfo(latitude:CLLocationDegrees, longtitude:CLLocationDegrees) {
         let manager = AFHTTPRequestOperationManager()
@@ -111,6 +116,7 @@ class WeatherService: NSObject {
     }
     
     func updateWeatherBackground(background: UIImageView, nightTime: Bool) {
+        background.layer.addAnimation(transition, forKey: nil)
         if nightTime {
             background.image = UIImage(named: "background_night")
         } else {
