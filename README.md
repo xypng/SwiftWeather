@@ -1,2 +1,2 @@
 # SwiftWeather
-![Aaron Swartz](https://raw.githubusercontent.com/xypng/SwiftWeather/master/SimulatorScreenShot.png)
+![Aaron Swartz](https://raw.githubusercontent.com/xypng/SwiftWeather/master/screenshot/01.png)
